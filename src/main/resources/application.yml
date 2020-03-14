@@ -1,38 +1,39 @@
 ##数据库配置
 spring:
   datasource:
-    url: jdbc:mysql://129.204.205.227:3306/book_drifting?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://129.204.205.227:3306/familymoney?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT%2B8
     username: root
     password: 3308296
     driver-class-name: com.mysql.cj.jdbc.Driver
-## jpa配置
-#jpa:
-#    show-sql: true
-#    properties:
-#      hibernate:
-#        format_sql: true
+  devtools:
+    restart:
+      enabled: true  #设置开启热部署
+      additional-paths: src/main/java #重启目录
+      exclude: WEB-INF/**
+    freemarker:
+      cache: false    #页面不加载缓存，修改即时生效
+#    hikari:
+#      readOnly: false
+#      connectionTimeout: 60000
+#      idleTimeout: 60000
+#      validationTimeout: 3000
+#      maxLifetime: 60000
+#      loginTimeout: 5
+#      maximumPoolSize: 60
+#      minimumIdle: 10
 server:
-  port: 8181
-#  spring:
-#    autoconfigure:
-#    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+  port: 8484
 ## 配置日志输出
 logging:
   level:
     root: warn
-    com.test.vue.dao: trace
+    com.fm.famliymoney: trace
   pattern:
     console: '%p%m%n'
     ##配置SQL xml文件路径
 mybatis-plus:
-  mapper-locations: classpath*:com/fm/famliymoney/mapper/* #sql语句xml文件路径配置
-#  config-location: classpath:mybatis-config.xml
-  type-aliases-package: com/fm/famliymoney/entity #xml扫描包具体路径配置
-#  ##逻辑删除 删除为1 不删除为0
-#  global-config:
-#    db-config:
-#      logic-not-delete-value: 0
-#      logic-delete-value: 1
-#  global-config:主键配置
-#    db-config:
-#      id-type: auto
+  mapper-locations: classpath*:resources/mapper/**/*.xml
+  #sql语句xml文件路径配置
+  config-location: classpath:mybatis-config.xml
+  type-aliases-package: com/fm/famliymoney/**/entity #xml扫描包具体路径配置
+
