@@ -1,5 +1,6 @@
 package com.fm.famliymoney.users.service;
 
+import com.fm.famliymoney.admin.mapper.AdminMapper;
 import com.fm.famliymoney.users.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +13,4 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-03-13
  */
 public interface IUsersService extends IService<Users> {
-
 }

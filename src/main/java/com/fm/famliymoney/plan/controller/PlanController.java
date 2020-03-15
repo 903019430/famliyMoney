@@ -10,10 +10,7 @@ import com.fm.famliymoney.plan.service.IPlanService;
 import com.fm.famliymoney.until.ResponseData;
 import com.fm.famliymoney.until.ResponseDataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -66,7 +63,7 @@ public class PlanController {
      * @return
      */
     @PostMapping("updateSave")
-    public ResponseData updateSave(Plan plan){
+    public ResponseData updateSave(@RequestBody Plan plan){
         boolean row = iPlanService.saveOrUpdate(plan,new UpdateWrapper<Plan>().lambda().eq(Plan::getDeleteStatus,0));
         if(row){
             return ResponseDataUtil.buildSuccess();
@@ -81,7 +78,7 @@ public class PlanController {
      * @return
      */
     @PostMapping("deleteById")
-    public ResponseData deleteById(Plan plan){
+    public ResponseData deleteById(@RequestBody Plan plan){
         Boolean row = iPlanService.update(plan,new UpdateWrapper<Plan>().lambda().eq(Plan::getDeleteStatus,1));
         if(row){
             return ResponseDataUtil.buildSuccess();

@@ -14,5 +14,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface AdminMapper extends BaseMapper<Admin> {
-
+    Admin loginadmin(String username,String password);
 }

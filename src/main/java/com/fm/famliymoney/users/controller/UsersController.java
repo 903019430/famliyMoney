@@ -9,10 +9,7 @@ import com.fm.famliymoney.until.ResponseDataUtil;
 import com.fm.famliymoney.users.entity.Users;
 import com.fm.famliymoney.users.service.IUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -64,7 +61,7 @@ public class UsersController {
      * @return
      */
     @PostMapping("updateSave")
-    public ResponseData updateSave(Users users){
+    public ResponseData updateSave(@RequestBody Users users){
         boolean row = iUsersService.saveOrUpdate(users,new UpdateWrapper<Users>().lambda().eq(Users::getDeleteStatus,0));
         if(row){
             return ResponseDataUtil.buildSuccess();
@@ -79,7 +76,7 @@ public class UsersController {
      * @return
      */
     @PostMapping("deleteById")
-    public ResponseData deleteById(Users users){
+    public ResponseData deleteById(@RequestBody Users users){
         Boolean row = iUsersService.update(users,new UpdateWrapper<Users>().lambda().eq(Users::getDeleteStatus,1));
         if(row){
             return ResponseDataUtil.buildSuccess();

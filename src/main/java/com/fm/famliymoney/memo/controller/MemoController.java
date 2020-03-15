@@ -10,10 +10,7 @@ import com.fm.famliymoney.memo.service.IMemoService;
 import com.fm.famliymoney.until.ResponseData;
 import com.fm.famliymoney.until.ResponseDataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -66,7 +63,7 @@ public class MemoController {
      * @return
      */
     @PostMapping("updateSave")
-    public ResponseData updateSave(Memo memo){
+    public ResponseData updateSave(@RequestBody Memo memo){
         boolean row = iMemoService.saveOrUpdate(memo,new UpdateWrapper<Memo>().lambda().eq(Memo::getDeleteStatus,0));
         if(row){
             return ResponseDataUtil.buildSuccess();
@@ -81,7 +78,7 @@ public class MemoController {
      * @return
      */
     @PostMapping("deleteById")
-    public ResponseData deleteById(Memo memo){
+    public ResponseData deleteById(@RequestBody Memo memo){
         Boolean row = iMemoService.update(memo,new UpdateWrapper<Memo>().lambda().eq(Memo::getDeleteStatus,1));
         if(row){
             return ResponseDataUtil.buildSuccess();

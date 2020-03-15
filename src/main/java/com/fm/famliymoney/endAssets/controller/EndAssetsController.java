@@ -8,10 +8,7 @@ import com.fm.famliymoney.endAssets.service.IEndAssetsService;
 import com.fm.famliymoney.until.ResponseData;
 import com.fm.famliymoney.until.ResponseDataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -64,7 +61,7 @@ public class EndAssetsController {
      * @return
      */
     @PostMapping("updateSave")
-    public ResponseData updateSave(EndAssets endAssets){
+    public ResponseData updateSave(@RequestBody EndAssets endAssets){
         boolean row = iEndAssetsService.saveOrUpdate(endAssets,null);
         if(row){
             return ResponseDataUtil.buildSuccess();
@@ -79,7 +76,7 @@ public class EndAssetsController {
      * @return
      */
     @PostMapping("deleteById")
-    public ResponseData deleteById(EndAssets endAssets){
+    public ResponseData deleteById(@RequestBody EndAssets endAssets){
         Boolean row = iEndAssetsService.update(endAssets,null);
         if(row){
             return ResponseDataUtil.buildSuccess();

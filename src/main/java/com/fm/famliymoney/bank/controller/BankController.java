@@ -10,11 +10,7 @@ import com.fm.famliymoney.bank.service.IBankService;
 import com.fm.famliymoney.until.ResponseData;
 import com.fm.famliymoney.until.ResponseDataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -70,7 +66,7 @@ public class BankController {
      * @return
      */
     @PostMapping("updataSave")
-    public ResponseData updataSave(Bank bank){
+    public ResponseData updataSave(@RequestBody Bank bank){
         Boolean row = iBankService.saveOrUpdate(bank,new UpdateWrapper<Bank>().lambda().eq(Bank::getDeleteStatus,0));
         if(row){
             return ResponseDataUtil.buildSuccess();
@@ -84,7 +80,7 @@ public class BankController {
      * @return
      */
     @PostMapping("deleteById")
-    public ResponseData deleteById(Bank bank){
+    public ResponseData deleteById(@RequestBody Bank bank){
         Boolean row = iBankService.update(bank,new UpdateWrapper<Bank>().lambda().eq(Bank::getDeleteStatus,1));
         if(row){
             return ResponseDataUtil.buildSuccess();

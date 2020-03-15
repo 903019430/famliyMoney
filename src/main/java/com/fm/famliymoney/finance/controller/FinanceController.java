@@ -10,10 +10,7 @@ import com.fm.famliymoney.finance.service.IFinanceService;
 import com.fm.famliymoney.until.ResponseData;
 import com.fm.famliymoney.until.ResponseDataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -67,7 +64,7 @@ public class FinanceController {
      * @return
      */
     @PostMapping("updateSave")
-    public ResponseData updateSave(Finance finance){
+    public ResponseData updateSave(@RequestBody Finance finance){
         boolean row = iFinanceService.saveOrUpdate(finance,new UpdateWrapper<Finance>().lambda().eq(Finance::getDeleteStatus,0));
         if(row){
             return ResponseDataUtil.buildSuccess();
@@ -82,7 +79,7 @@ public class FinanceController {
      * @return
      */
     @PostMapping("deleteById")
-    public ResponseData deleteById(Finance finance){
+    public ResponseData deleteById(@RequestBody Finance finance){
         Boolean row = iFinanceService.update(finance,new UpdateWrapper<Finance>().lambda().eq(Finance::getDeleteStatus,1));
         if(row){
             return ResponseDataUtil.buildSuccess();

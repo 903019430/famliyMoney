@@ -4,7 +4,10 @@ import com.fm.famliymoney.users.entity.Users;
 import com.fm.famliymoney.users.mapper.UsersMapper;
 import com.fm.famliymoney.users.service.IUsersService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -16,5 +19,4 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements IUsersService {
-
 }

@@ -10,10 +10,7 @@ import com.fm.famliymoney.spendIncomeUser.service.ISpendIncomeUserService;
 import com.fm.famliymoney.until.ResponseData;
 import com.fm.famliymoney.until.ResponseDataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -66,7 +63,7 @@ public class SpendIncomeUserController {
      * @return
      */
     @PostMapping("updateSave")
-    public ResponseData updateSave(SpendIncomeUser spendIncomeUser){
+    public ResponseData updateSave(@RequestBody SpendIncomeUser spendIncomeUser){
         boolean row = iSpendIncomeUserService.saveOrUpdate(spendIncomeUser,new UpdateWrapper<SpendIncomeUser>().lambda().eq(SpendIncomeUser::getDeleteStatus,0));
         if(row){
             return ResponseDataUtil.buildSuccess();
@@ -81,7 +78,7 @@ public class SpendIncomeUserController {
      * @return
      */
     @PostMapping("deleteById")
-    public ResponseData deleteById(SpendIncomeUser spendIncomeUser){
+    public ResponseData deleteById(@RequestBody SpendIncomeUser spendIncomeUser){
         Boolean row = iSpendIncomeUserService.update(spendIncomeUser,new UpdateWrapper<SpendIncomeUser>().lambda().eq(SpendIncomeUser::getDeleteStatus,1));
         if(row){
             return ResponseDataUtil.buildSuccess();

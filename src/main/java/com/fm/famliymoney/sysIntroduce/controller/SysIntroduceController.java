@@ -8,10 +8,7 @@ import com.fm.famliymoney.sysIntroduce.service.ISysIntroduceService;
 import com.fm.famliymoney.until.ResponseData;
 import com.fm.famliymoney.until.ResponseDataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -64,7 +61,7 @@ public class SysIntroduceController {
      * @return
      */
     @PostMapping("updateSave")
-    public ResponseData updateSave(SysIntroduce sysIntroduce){
+    public ResponseData updateSave(@RequestBody SysIntroduce sysIntroduce){
         boolean row = iSysIntroduceService.saveOrUpdate(sysIntroduce);
         if(row){
             return ResponseDataUtil.buildSuccess();
@@ -79,7 +76,7 @@ public class SysIntroduceController {
      * @return
      */
     @PostMapping("deleteById")
-    public ResponseData deleteById(SysIntroduce sysIntroduce){
+    public ResponseData deleteById(@RequestBody SysIntroduce sysIntroduce){
         Boolean row = iSysIntroduceService.update(sysIntroduce,null);
         if(row){
             return ResponseDataUtil.buildSuccess();
