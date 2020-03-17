@@ -51,11 +51,10 @@ public class SpendIncomeController {
     @GetMapping("getById")
     public ResponseData getById(String id){
         SpendIncome spendIncome = iSpendIncomeService.getById(id);
-        if(StringUtils.isBlank(id) && null == spendIncome){
-            return ResponseDataUtil.buildError();
-        }else{
-            return ResponseDataUtil.buildSuccess(spendIncome);
+        if(null == spendIncome){
+            spendIncome.setDeleteStatus(0);
         }
+            return ResponseDataUtil.buildSuccess(spendIncome);
     }
 
     /**

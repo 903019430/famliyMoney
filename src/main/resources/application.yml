@@ -22,7 +22,12 @@ spring:
       exclude: WEB-INF/**
   freemarker:
     cache: false    #页面不加载缓存，修改即时生效
-
+  # 上传文件总的最大值
+  servlet.multipart.max-request-size: 10MB
+  # 单个文件的最大值
+  servlet.multipart.max-file-size: 10MB
+#  resources:
+#    static-locations: classpath:/resources/static/
 server:
   port: 8484
 ## 配置日志输出
@@ -38,4 +43,5 @@ mybatis-plus:
   #sql语句xml文件路径配置
   config-location: classpath:mybatis-config.xml
   type-aliases-package: com.fm.famliymoney.*.entity #xml扫描包具体路径配置
+
 
