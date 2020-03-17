@@ -3,13 +3,18 @@ package com.fm.famliymoney.users.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fm.famliymoney.until.ResponseData;
 import com.fm.famliymoney.until.ResponseDataUtil;
 import com.fm.famliymoney.users.entity.Users;
+import com.fm.famliymoney.users.mapper.UsersMapper;
 import com.fm.famliymoney.users.service.IUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * <p>
@@ -29,14 +34,14 @@ public class UsersController {
      * @return
      */
     @GetMapping("getlist")
-    public ResponseData list(Integer size,Integer page){
-        Page<Users> usersPage = new Page<>();
+    public ResponseData list(Integer size, Integer page, Map<String,Object> params){
+        Page<Users> usersPage = new Page<Users>();
         if(null == size || null == page){
             usersPage.setSize(20);
-            usersPage.setPages(1);
+            usersPage.setCurrent(1);
         }else {
             usersPage.setSize(size);
-            usersPage.setPages(page);
+            usersPage.setCurrent(page);
         }
         usersPage=iUsersService.page(usersPage,new QueryWrapper<Users>().lambda().eq(Users::getDeleteStatus,0));
         return ResponseDataUtil.buildSuccess(usersPage);
@@ -77,7 +82,7 @@ public class UsersController {
      */
     @PostMapping("deleteById")
     public ResponseData deleteById(@RequestBody Users users){
-        Boolean row = iUsersService.update(users,new UpdateWrapper<Users>().lambda().eq(Users::getDeleteStatus,1));
+        Boolean row = iUsersService.update(users,new UpdateWrapper<Users>().lambda().eq(Users::getId,users.getId()).set(Users::getDeleteStatus,1));
         if(row){
             return ResponseDataUtil.buildSuccess();
         }else{
