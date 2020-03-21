@@ -3,16 +3,17 @@ package com.fm.famliymoney.moneyInfo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fm.famliymoney.memo.entity.Memo;
-import com.fm.famliymoney.memo.service.IMemoService;
 import com.fm.famliymoney.moneyInfo.entity.MoneyInfo;
 import com.fm.famliymoney.moneyInfo.service.IMoneyInfoService;
 import com.fm.famliymoney.until.ResponseData;
 import com.fm.famliymoney.until.ResponseDataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -32,7 +33,7 @@ public class MoneyInfoController {
      * @return
      */
     @GetMapping("getlist")
-    public ResponseData list(Integer size, Integer page){
+    public ResponseData list(Integer size, Integer page,String title,String createDate){
         Page<MoneyInfo> moneyInfoPage = new Page<>();
         if(null == size || null == page){
             moneyInfoPage.setSize(20);
@@ -41,7 +42,15 @@ public class MoneyInfoController {
             moneyInfoPage.setSize(size);
             moneyInfoPage.setPages(page);
         }
-        moneyInfoPage=iMoneyInfoService.page(moneyInfoPage,new QueryWrapper<MoneyInfo>().lambda().eq(MoneyInfo::getDeleteStatus,0));
+        QueryWrapper<MoneyInfo> queryWrapper = new QueryWrapper<MoneyInfo>();
+        queryWrapper.lambda().eq(MoneyInfo::getDeleteStatus,0).orderByDesc(MoneyInfo::getCreateDate);
+        if(null!=title){
+            queryWrapper.lambda().like(MoneyInfo::getTitle,title);
+        }
+        if(null != createDate){
+            queryWrapper.lambda().like(MoneyInfo::getCreateDate,createDate);
+        }
+        moneyInfoPage=iMoneyInfoService.page(moneyInfoPage,queryWrapper);
         return ResponseDataUtil.buildSuccess(moneyInfoPage);
     }
 
@@ -51,13 +60,15 @@ public class MoneyInfoController {
      * @return
      */
     @GetMapping("getById")
-    public ResponseData getById(String id){
+    public ResponseData getById(String id, HttpServletRequest request){
         MoneyInfo moneyInfo = iMoneyInfoService.getById(id);
-        if(StringUtils.isBlank(id) && null == moneyInfo){
-            return ResponseDataUtil.buildError();
-        }else{
-            return ResponseDataUtil.buildSuccess(moneyInfo);
+        if(null == moneyInfo){
+            String userid = (String) request.getSession().getAttribute("username");
+            moneyInfo = new MoneyInfo();
+            moneyInfo.setDeleteStatus(0);
+            moneyInfo.setCreateId(userid);
         }
+        return ResponseDataUtil.buildSuccess(moneyInfo);
     }
 
     /**
@@ -66,7 +77,10 @@ public class MoneyInfoController {
      */
     @PostMapping("updateSave")
     public ResponseData updateSave(@RequestBody MoneyInfo moneyInfo){
-        boolean row = iMoneyInfoService.saveOrUpdate(moneyInfo,new UpdateWrapper<MoneyInfo>().lambda().eq(MoneyInfo::getDeleteStatus,0));
+        if(null==moneyInfo.getId()){
+            moneyInfo.setCreateDate(LocalDateTime.now());
+        }
+        boolean row = iMoneyInfoService.saveOrUpdate(moneyInfo);
         if(row){
             return ResponseDataUtil.buildSuccess();
         }else{

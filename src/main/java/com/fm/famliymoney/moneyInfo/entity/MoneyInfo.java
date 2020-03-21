@@ -1,10 +1,13 @@
 package com.fm.famliymoney.moneyInfo.entity;
 
+import java.sql.Clob;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import javax.xml.soap.Text;
 
 /**
  * <p>

@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,12 +31,14 @@ import java.util.Map;
 public class UsersController {
     @Autowired
     private IUsersService iUsersService;
+    @Resource
+    private UsersMapper usersMapper;
     /**
      * 获取page数据
      * @return
      */
     @GetMapping("getlist")
-    public ResponseData list(Integer size, Integer page, Map<String,Object> params){
+    public ResponseData list(Integer size, Integer page, String text){
         Page<Users> usersPage = new Page<Users>();
         if(null == size || null == page){
             usersPage.setSize(20);
@@ -43,7 +47,14 @@ public class UsersController {
             usersPage.setSize(size);
             usersPage.setCurrent(page);
         }
-        usersPage=iUsersService.page(usersPage,new QueryWrapper<Users>().lambda().eq(Users::getDeleteStatus,0));
+        QueryWrapper<Users> queryWrapper = new QueryWrapper<Users>();
+        if(text!=null) {
+            queryWrapper.lambda().eq(Users::getDeleteStatus, 0).and(i -> i.like(Users::getWechatlogo1, text).or().like(Users::getWechatlogo2, text)
+                    .or().like(Users::getWechatlogo3, text).or().like(Users::getWechatlogo4, text));
+        }else{
+            queryWrapper.lambda().eq(Users::getDeleteStatus, 0);
+        }
+        usersPage=iUsersService.page(usersPage,queryWrapper);
         return ResponseDataUtil.buildSuccess(usersPage);
     }
 
@@ -88,6 +99,24 @@ public class UsersController {
         }else{
             return ResponseDataUtil.buildError();
         }
+    }
+
+    /**
+     * user报表
+     * @param text
+     * @return
+     */
+    @GetMapping("userEcharts")
+    public ResponseData UserEcharts(String text){
+        List<Map<String, Object>> map = new ArrayList<>();
+        if(text.equals("week")){
+            map = usersMapper.userWeekEcharts();
+        }else if(text.equals("month")){
+            map = usersMapper.userMonthEcharts();
+        }else if(text.equals("year")){
+            map = usersMapper.userYearEcharts();
+        }
+        return ResponseDataUtil.buildSuccess(map);
     }
 }
 

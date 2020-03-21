@@ -40,7 +40,8 @@ public class FinanceController {
             financePage.setSize(size);
             financePage.setPages(page);
         }
-        financePage=iFinanceService.page(financePage,new QueryWrapper<Finance>().lambda().eq(Finance::getDeleteStatus,0));
+        financePage=iFinanceService.page(financePage,new QueryWrapper<Finance>().lambda().eq(Finance::getDeleteStatus,0)
+        .orderByDesc(Finance::getCreateTime));
         return ResponseDataUtil.buildSuccess(financePage);
     }
 
@@ -52,11 +53,11 @@ public class FinanceController {
     @GetMapping("getById")
     public ResponseData getById(String id){
         Finance finance = iFinanceService.getById(id);
-        if(StringUtils.isBlank(id) && null == finance){
-            return ResponseDataUtil.buildError();
-        }else{
-            return ResponseDataUtil.buildSuccess(finance);
+        if(null == finance) {
+            finance = new Finance();
+            finance.setDeleteStatus(0);
         }
+            return ResponseDataUtil.buildSuccess(finance);
     }
 
     /**

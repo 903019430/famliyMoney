@@ -30,7 +30,7 @@ public class SpendIncomeController {
      * @return
      */
     @GetMapping("getlist")
-    public ResponseData list(Integer size, Integer page){
+    public ResponseData list(Integer size, Integer page,String name,String type){
         Page<SpendIncome> spendIncomePage = new Page<>();
         if(null == size || null == page){
             spendIncomePage.setSize(20);
@@ -39,7 +39,15 @@ public class SpendIncomeController {
             spendIncomePage.setSize(size);
             spendIncomePage.setPages(page);
         }
-        spendIncomePage=iSpendIncomeService.page(spendIncomePage,new QueryWrapper<SpendIncome>().lambda().eq(SpendIncome::getDeleteStatus,0));
+        QueryWrapper<SpendIncome> queryWrapper = new QueryWrapper<SpendIncome>();
+        queryWrapper.lambda().eq(SpendIncome::getDeleteStatus,0);
+        if(name != null){
+            queryWrapper.lambda().like(SpendIncome::getName,name);
+        }
+        if(type != null){
+            queryWrapper.lambda().like(SpendIncome::getType,type);
+        }
+        spendIncomePage=iSpendIncomeService.page(spendIncomePage,queryWrapper);
         return ResponseDataUtil.buildSuccess(spendIncomePage);
     }
 
@@ -52,6 +60,7 @@ public class SpendIncomeController {
     public ResponseData getById(String id){
         SpendIncome spendIncome = iSpendIncomeService.getById(id);
         if(null == spendIncome){
+            spendIncome = new SpendIncome();
             spendIncome.setDeleteStatus(0);
         }
             return ResponseDataUtil.buildSuccess(spendIncome);
@@ -63,7 +72,7 @@ public class SpendIncomeController {
      */
     @PostMapping("updateSave")
     public ResponseData updateSave(@RequestBody SpendIncome spendIncome){
-        boolean row = iSpendIncomeService.saveOrUpdate(spendIncome,new UpdateWrapper<SpendIncome>().lambda().eq(SpendIncome::getDeleteStatus,0));
+        boolean row = iSpendIncomeService.saveOrUpdate(spendIncome);
         if(row){
             return ResponseDataUtil.buildSuccess();
         }else{
